@@ -1,17 +1,20 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <LoginComp/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import LoginComp from './login/LoginComp.vue'
+import M from 'materialize-css'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    LoginComp
+  },
+  mounted () {
+    M.AutoInit()
   }
 }
 </script>
@@ -22,7 +25,13 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  color: #039be5;
+  margin-top: 0px;
+}
+
+body {
+  color: #039be5;
+  background-color: #f4f4f4 ;
+  overflow: hidden; /* Hide scrollbars */
 }
 </style>
