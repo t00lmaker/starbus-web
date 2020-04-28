@@ -1,17 +1,18 @@
 <template>
   <div id="app">
-    <LoginComp/>
+    <SimpleLoc/>
   </div>
 </template>
 
 <script>
-import LoginComp from './login/LoginComp.vue'
+import SimpleLoc from './map/SimpleLoc'
 import M from 'materialize-css'
+
 
 export default {
   name: 'App',
   components: {
-    LoginComp
+    SimpleLoc
   },
   mounted () {
     M.AutoInit()
@@ -34,4 +35,5 @@ body {
   background-color: #f4f4f4 ;
   overflow: hidden; /* Hide scrollbars */
 }
+
 </style>
