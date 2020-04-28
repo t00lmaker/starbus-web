@@ -1,19 +1,14 @@
 <template>
   <div id="app">
-    <SimpleLoc/>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import SimpleLoc from './map/SimpleLoc'
 import M from 'materialize-css'
-
 
 export default {
   name: 'App',
-  components: {
-    SimpleLoc
-  },
   mounted () {
     M.AutoInit()
   }

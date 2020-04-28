@@ -2,13 +2,20 @@ import Vue from 'vue'
 import App from './App.vue'
 import 'materialize-css/dist/css/materialize.min.css'
 import 'material-design-icons/iconfont/material-icons.css'
-import * as VueGoogleMaps from 'vue2-google-maps'
-import VueGeoLocation from 'vue-browser-geolocation'
+import * as VueGoogleMaps from "vue2-google-maps"
+import VueGeoLocation from "vue-browser-geolocation"
+import VueRouter from "vue-router"
+import Routes from "./routes"
 
 Vue.config.productionTip = false
 
-Vue.use(VueGeoLocation)
+Vue.use(VueRouter)
 
+const router = new VueRouter({
+  routes: Routes
+})
+
+Vue.use(VueGeoLocation)
 Vue.use(VueGoogleMaps, {
   load: {
     key: 'AIzaSyDe4DCr8GkPWD4lP0M6UILznsmjuzCoQGI',
@@ -35,6 +42,9 @@ Vue.use(VueGoogleMaps, {
   installComponents: true
 })
 
+
+
 new Vue({
   render: h => h(App),
+  router: router
 }).$mount('#app')
