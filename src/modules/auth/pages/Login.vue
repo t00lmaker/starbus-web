@@ -7,7 +7,7 @@
             <div class="blue-text z-depth-4 lighten-4 row container login-card">
               <div class="row">
                 <div class="logo">
-                  <img alt="Starbus logo" src="../assets/logo.png">
+                  <img alt="Starbus logo" src="/logo.png">
                 </div>
               </div>
               <div class="row">
@@ -57,7 +57,7 @@
 
 <script>
 export default {
-  name: 'LoginComp',
+  name: 'Login',
 }
 </script>
 
