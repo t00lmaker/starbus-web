@@ -20,21 +20,21 @@
               <div class='row'>
                 <div class='input-field col s12 m12 l8 push-l2'>
                   <i class="material-icons prefix icon-blue ">face</i>
-                  <input class='validate' type="text" name='username' id='email' required />
+                  <input class='validate' type="text" name='username' id='email' required   v-model="form.username"/>
                   <label for='email'>Username</label>
                 </div>
               </div>
               <div class='row'>
                 <div class='input-field col s12 m12 l8 push-l2'>
                   <i class="material-icons prefix icon-blue">lock_open</i>
-                  <input class='validate ' type='password' name='password' id='password' required />
+                  <input class='validate ' type='password' name='password' id='password' required  v-model="form.password" />
                   <label for='password'>Password</label>
                 </div>
               </div>
               <br/>
               <div class='row'>
                 <div class='input-field col s12 m8 l8 offset-m2 offset-l2 '>
-                  <button type='submit' name='btn_login' class='btn blue'>Entrar</button>
+                  <button type='submit' name='btn_login' class='btn blue' @click="submit">Entrar</button>
                 </div>
               </div>
               <div class="row">
@@ -57,13 +57,22 @@
 
 <script>
 import { mapActions } from 'vuex'
+
 export default {
   name: 'Login',
-  created (){
-    this.ActionSetUser({ name: "Luan", email: "luanpontes2@gmail.com"})
-  },
+  data: () => ({
+    form: {
+      username: '',
+      password: ''
+    }
+  }),
   methods: {
-    ...mapActions('auth', ['ActionSetUser'])
+    ...mapActions('auth', ['ActionDoLogin']),
+    submit(){
+      this.ActionDoLogin(this.form).then( res => {
+        console.log(res.data)
+      })
+    }
   }
 }
 </script>
