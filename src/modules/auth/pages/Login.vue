@@ -56,8 +56,15 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'Login',
+  created (){
+    this.ActionSetUser({ name: "Luan", email: "luanpontes2@gmail.com"})
+  },
+  methods: {
+    ...mapActions('auth', ['ActionSetUser'])
+  }
 }
 </script>
 
