@@ -62,16 +62,22 @@ export default {
   name: 'Login',
   data: () => ({
     form: {
+      application: 'starbus',
       username: '',
       password: ''
     }
   }),
   methods: {
     ...mapActions('auth', ['ActionDoLogin']),
-    submit(){
-      this.ActionDoLogin(this.form).then( res => {
-        console.log(res.data)
-      })
+    async submit(){
+      try{
+        await this.ActionDoLogin(this.form)
+
+        this.$router.push({ name: 'map'})
+      }catch(err) {
+        console.log(err)
+        alert(err.data ? err.data.detalhe : 'Not working!')
+      }
     }
   }
 }
