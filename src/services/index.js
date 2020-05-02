@@ -15,5 +15,10 @@ Object.keys(services).map(service => {
   services[service] = Vue.resource('', {}, services[service])
 })
 
-export { http }
+const setBearerToken = token => {
+   console.log(" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+token)
+   http.headers.common['Authorization'] = 'Bearer '+token
+}
+
+export { http, setBearerToken }
 export default services

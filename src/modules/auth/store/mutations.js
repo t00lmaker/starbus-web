@@ -6,5 +6,8 @@ export default {
   },
   [types.SET_TOKEN] (state, payload){
     state.token = payload
+  },
+  [types.SET_APP] (state, payload){
+    state.app = payload
   }
 }

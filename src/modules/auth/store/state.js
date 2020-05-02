@@ -1,5 +1,6 @@
 /* dataset module */
 export default {
-  user: {}, 
+  user: {},
+  app: {},
   token: ''
 }
