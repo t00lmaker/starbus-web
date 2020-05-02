@@ -16,7 +16,6 @@ Object.keys(services).map(service => {
 })
 
 const setBearerToken = token => {
-   console.log(" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+token)
    http.headers.common['Authorization'] = 'Bearer '+token
 }
 

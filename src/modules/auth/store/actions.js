@@ -5,7 +5,6 @@ import * as storage from '../storage'
 
 export const ActionDoLogin = ({ dispatch }, payload) => {
   return services.auth.login(payload).then( res => {
-    console.log(res.data)
     dispatch('ActionSetUser', res.data.user)
     dispatch('ActionSetToken', res.data.token)
     dispatch('ActionSetApp', res.data.application)
@@ -47,14 +46,10 @@ export const ActionSignOut = ({ dispatch }) => {
 export const ActionLoadSession = ({ dispatch }) => {
   (async function () {  
     try{
-      console.log('#99')
       const { data : { app, user } } = await services.auth.session()
-      console.log('#100')
       dispatch('ActionSetUser', user)
       dispatch('ActionSetApp', app)
-    
     }catch (err) {
-      console.log('#101')
       dispatch('ActionSignOut')
     }
   })()

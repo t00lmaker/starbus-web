@@ -7,7 +7,7 @@
             <div class="blue-text z-depth-4 lighten-4 row container login-card">
               <div class="row">
                 <div class="logo">
-                  <img alt="Starbus logo" src="/logo.png">
+                  <img alt="Starbus logo" src="logo.png" width=”20%” height=”40%” >
                 </div>
               </div>
               <div class="row">
