@@ -1,113 +1,109 @@
 <template>
-  <div id="app" v-cloak>
-    <h1>Your Loc </h1>
-    
-    <div v-if="errorStr">
-      Sorry, but the following error
-      occurred: {{errorStr}}
-    </div>
-    
-    <div v-if="gettingLocation">
-      <i>Getting your location...</i>
+  <div class="map-comp">
+    <GmapMap
+    :center="center"
+    :zoom="18"
+    ref="mapRef"
+    @click="clickMap"
+    @dragend="dragMap"
+  >
+    <span class="map-icon map-icon-archery">
+      <GmapMarker
+        :position= mapCoordinates
+        :clickable="true"
+        :draggable="true"
+        icon="icons/place.png"
+        @dragend="dragMarker"
+      />
       
-    </div>
-    <div classe="row">
-      <div class="col s6 m6 l6" v-if="myCoordinates">
-        Your location <img ref="http://localhost:8080/marker-stroked-11.svg" style="with: 20px; height: 20px;"/> data is {{ myCoordinates.lat }}, {{ myCoordinates.lng}}
-      </div>
+      <GmapMarker
+        :position= userLocation
+        :clickable="true"
+        icon="icons/user_location.png"
+        :draggable="true"
+        @dragend="dragMarker"
+      />
+       
+       <GmapMarker
+        :key="i"
+        v-for="(stopGreen, i) in stopsGreen"
+        :position= stopGreen.coordinates
+        :clickable="true"
+        icon="icons/stop_green.png"
+        :draggable="false"
+        @dragend="dragMarker"
+      />
 
-      <div class="col s6 m6 l6" v-if="myCoordinates">
-        Map Location is {{ mapCoordinates.lat }}, {{ mapCoordinates.lng }}
-      </div>
+      <GmapMarker
+       :key="i+5"
+        v-for="(stopRed, i) in stopsRed"
+        :position= stopRed.coordinates
+        :clickable="true"
+        icon="icons/stop_red.png"
+        :draggable="false"
+        @dragend="dragMarker"
+      />
 
-      <div class="row">
-        <div class="col s6 m6 l6">
-          <gmap-autocomplete class="introInput" @place_changed="changePlace" >
-            <template v-slot:input="slotProps">
-                <v-text-field outlined
-                              prepend-inner-icon="place"
-                              placeholder="Location Of Event"
-                              ref="input"
-                              v-on:listeners="slotProps.listeners"
-                              v-on:attrs="slotProps.attrs">
-                </v-text-field>
-            </template>
-          </gmap-autocomplete>
-        </div>
-      </div>
-    </div>
-
-    
-
-    <div class="row">
-      <div class="col s12 m12 l8 push-l2">
-        <GmapMap
-          :center="center"
-          :zoom="18"
-          style="width: 100%; height: 600px; margin: 5% auto"
-          ref="mapRef"
-          @click="clickMap"
-          @dragend="dragMap"
-        >
-          <span class="map-icon map-icon-archery">
-            <GmapMarker
-              :position= myCoordinates
-              :clickable="true"
-              icon="mylocation.svg"
-              :draggable="true"
-              @dragend="dragMarker"
-            />
-          </span>
-           <GmapMarker
-            :position= mapCoordinates
-            :clickable="true"
-            :draggable="true"
-            icon="place.svg"
-            @dragend="dragMarker"
-          />
-         </GmapMap>
-      </div>
-    </div>
+    </span>
+    </GmapMap>
   </div>
-
 </template>
 
 <script>
-export default {
+import { mapState } from 'vuex'
 
+export default {
   data(){ 
     return {
+      indexStopG: 0,
+      indexStopR: 0,
       map: null,
-      myCoordinates: {
-        lat: 0,
-        lng: 0
-      },
       center: {
-         lat: -5.08921,
+        lat: -5.08921,
         lng: -42.8016
       },
+      stopsRed : [
+        { 
+          name: 'stop1',
+          coordinates: {
+            lat: -5.08821,
+            lng: -42.8056
+          }
+        },
+        {
+          name: 'stop2',
+          coordinates: {
+            lat: -5.08701,
+            lng: -42.8026
+          }
+        },
+      ], 
+      stopsGreen: [
+        { 
+          name: 'stop3',
+          coordinates: {
+            lat: -5.08621,
+            lng: -42.8026
+          }
+        },
+        {
+          name: 'stop4',
+          coordinates: {
+            lat: -5.08921,
+            lng: -42.8036
+          }
+        },
+      ],
       gettingLocation: true,
       errorStr: null
     }
   },
   mounted(){
+    this.$store.dispatch('map/ActionLoadLocation')
     this.$refs.mapRef.$mapPromise.then(map => this.map = map)
   },
   created() {
-    this.$getLocation({})
-      .then( coordinates => {
-          this.center = coordinates;
-          this.myCoordinates = coordinates;
-          this.gettingLocation = false;
-      })
-      .catch( error => {
-        console.log(error)
-        this.errorStr = error.message;
-        this.myCoordinates = { // Teresina
-          lat: -5.08921,
-          lng: -42.8016
-        }
-      })
+    console.log("#0")
   },
   methods: {
     clickMap (e) {
@@ -124,7 +120,6 @@ export default {
       console.log(e.latLng.lat())
       console.log(e.latLng.lng())
     },
-
     changePlace(e){
       this.center = { 
           lat: e.geometry.location.lat(), 
@@ -135,6 +130,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('map', ['userLocation']),
     mapCoordinates() { 
       if(this.map) {
         return {
@@ -147,3 +143,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.map-comp .vue-map-container { 
+  height: 100vh; 
+  width:100%;
+  margin: 0% auto;
+}
+
+</style>
