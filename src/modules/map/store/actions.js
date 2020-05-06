@@ -1,24 +1,30 @@
 import * as types from './mutations-types'
-import store from '../store'
 
-export const ActionLoadLocation = ( state ) => {
-  console.log("#2")
-  let coordinates = { // Teresina
-    lat: -5.08921,
-    lng: -42.8016 
-  }
+export const ActionLoadLocation = ( { dispatch }) => {
+  navigator.geolocation.getCurrentPosition(pos => {
 
-  try{
-    coordinates = {
-      lat: store.geolocation.lat,
-      lng: store.geolocation.lng
+    const coordinates = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude
     }
-  }catch(err){
-    console.log(err)
-  }
   
-  state.dispatch('ActionSetUserLocation', coordinates)
-  state.dispatch('ActionSetPlace', coordinates)
+    dispatch('ActionSetUserLocation', coordinates)
+    dispatch('ActionSetPlace', coordinates)
+  }, err => {
+    console.log(err)
+    
+    const coordinates = { // Teresina
+      lat: -5.08921,
+      lng: -42.8016 
+    }
+    
+    dispatch('ActionSetUserLocation', coordinates)
+    dispatch('ActionSetPlace', coordinates)
+  })
+}
+
+export const ActionLoadCloseStops = ({ dispatch }) => {
+  
 }
 
 export const ActionSetUserLocation = ({ commit }, payload) => {

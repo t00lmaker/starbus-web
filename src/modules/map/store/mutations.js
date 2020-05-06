@@ -5,7 +5,7 @@ export default {
     state.userLocation = payload
   },
   [types.SET_PLACE] (state, payload){
-    state.local = payload
+    state.place = payload
   },
   [types.SET_RED_STOPS] (state, payload) {
     state.redStops = payload

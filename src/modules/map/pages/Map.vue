@@ -1,62 +1,62 @@
 <template>
+  
   <div class="map-comp">
+  
     <GmapMap
-    :center="center"
-    :zoom="18"
-    ref="mapRef"
-    @click="clickMap"
-    @dragend="dragMap"
-  >
-    <span class="map-icon map-icon-archery">
-      <GmapMarker
-        :position= mapCoordinates
-        :clickable="true"
-        :draggable="true"
-        icon="icons/place.png"
-        @dragend="dragMarker"
-      />
-      
-      <GmapMarker
-        :position= userLocation
-        :clickable="true"
-        icon="icons/user_location.png"
-        :draggable="true"
-        @dragend="dragMarker"
-      />
-       
-       <GmapMarker
-        :key="i"
-        v-for="(stopGreen, i) in stopsGreen"
-        :position= stopGreen.coordinates
-        :clickable="true"
-        icon="icons/stop_green.png"
-        :draggable="false"
-        @dragend="dragMarker"
-      />
+      :center= center
+      :zoom="18"
+      ref="mapRef"
+      @click="clickMap"
+      @dragend="dragMap"
+    >
+      <span class="map-icon map-icon-archery">
+        <GmapMarker
+          :position= place
+          :clickable="true"
+          :draggable="true"
+          icon="icons/place.png"
+          @dragend="dragMarker"
+        />
+        
+        <GmapMarker
+          :position= userLocation
+          :clickable="true"
+          icon="icons/user_location.png"
+          :draggable="true"
+          @dragend="dragMarker"
+        />
+        
+        <GmapMarker
+          :key="i"
+          v-for="(stopGreen, i) in stopsGreen"
+          :position= stopGreen.coordinates
+          :clickable="true"
+          icon="icons/stop_green.png"
+          :draggable="false"
+          @dragend="dragMarker"
+        />
 
-      <GmapMarker
-       :key="i+5"
-        v-for="(stopRed, i) in stopsRed"
-        :position= stopRed.coordinates
-        :clickable="true"
-        icon="icons/stop_red.png"
-        :draggable="false"
-        @dragend="dragMarker"
-      />
+        <GmapMarker
+        :key="i+5"
+          v-for="(stopRed, i) in stopsRed"
+          :position= stopRed.coordinates
+          :clickable="true"
+          icon="icons/stop_red.png"
+          :draggable="false"
+          @dragend="dragMarker"
+        />
 
-    </span>
+      </span>
     </GmapMap>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   data(){ 
     return {
-      indexStopG: 0,
-      indexStopR: 0,
       map: null,
       center: {
         lat: -5.08921,
@@ -99,13 +99,11 @@ export default {
     }
   },
   mounted(){
-    this.$store.dispatch('map/ActionLoadLocation')
+    this.ActionLoadLocation()
     this.$refs.mapRef.$mapPromise.then(map => this.map = map)
   },
-  created() {
-    console.log("#0")
-  },
   methods: {
+    ...mapActions('map', ['ActionLoadLocation']),
     clickMap (e) {
       console.log(e.latLng.lat())
       console.log(e.latLng.lng())
@@ -130,7 +128,6 @@ export default {
     }
   },
   computed: {
-    ...mapState('map', ['userLocation']),
     mapCoordinates() { 
       if(this.map) {
         return {
@@ -138,8 +135,16 @@ export default {
           lng: this.map.getCenter().lng()
         }
       }
-      return this.myCoordinates
-    }
+      return this.userLocation
+    },
+    ...mapState(
+      'map', [
+        'userLocation', 
+        'greenStop',
+        'redStop',
+        'place'
+      ]
+    ),
   }
 }
 </script>
