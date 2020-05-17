@@ -1,7 +1,6 @@
 <template>
   
   <div class="map-comp">
-  
     <GmapMap
       :center= center
       :zoom="18"
@@ -15,7 +14,7 @@
           :clickable="true"
           :draggable="true"
           icon="icons/place.png"
-          @dragend="dragMarker"
+          @dragend="dragPlace"
         />
         
         <GmapMarker
@@ -23,27 +22,25 @@
           :clickable="true"
           icon="icons/user_location.png"
           :draggable="true"
-          @dragend="dragMarker"
+          @dragend="dragUser"
         />
         
         <GmapMarker
-          :key="i"
-          v-for="(stopGreen, i) in stopsGreen"
-          :position= stopGreen.coordinates
+          :key="stopUser.code"
+          v-for="stopUser in stopsUserLocation"
+          :position= stopUser.coordinates
           :clickable="true"
           icon="icons/stop_green.png"
           :draggable="false"
-          @dragend="dragMarker"
         />
 
         <GmapMarker
-        :key="i+5"
-          v-for="(stopRed, i) in stopsRed"
-          :position= stopRed.coordinates
+        :key="stopPlace.code"
+          v-for="stopPlace in stopsPlace"
+          :position= stopPlace.coordinates
           :clickable="true"
           icon="icons/stop_red.png"
           :draggable="false"
-          @dragend="dragMarker"
         />
 
       </span>
@@ -61,49 +58,26 @@ export default {
       center: {
         lat: -5.08921,
         lng: -42.8016
-      },
-      stopsRed : [
-        { 
-          name: 'stop1',
-          coordinates: {
-            lat: -5.08821,
-            lng: -42.8056
-          }
-        },
-        {
-          name: 'stop2',
-          coordinates: {
-            lat: -5.08701,
-            lng: -42.8026
-          }
-        },
-      ], 
-      stopsGreen: [
-        { 
-          name: 'stop3',
-          coordinates: {
-            lat: -5.08621,
-            lng: -42.8026
-          }
-        },
-        {
-          name: 'stop4',
-          coordinates: {
-            lat: -5.08921,
-            lng: -42.8036
-          }
-        },
-      ],
-      gettingLocation: true,
-      errorStr: null
+      }
     }
   },
   mounted(){
     this.ActionLoadLocation()
+    this.ActionLoadCloseStops({
+      action: 'ActionSetStopsUserLocation',
+      coordinates: { // Teresina
+        lat: -5.08921,
+        lng: -42.8016 
+      } 
+    })
     this.$refs.mapRef.$mapPromise.then(map => this.map = map)
   },
   methods: {
-    ...mapActions('map', ['ActionLoadLocation']),
+    ...mapActions('map', [
+      'ActionLoadLocation',
+      'ActionLoadCloseStops',
+      'ActionSegregationStop'
+    ]),
     clickMap (e) {
       console.log(e.latLng.lat())
       console.log(e.latLng.lng())
@@ -113,18 +87,23 @@ export default {
       console.log(this.map.getCenter().lat())
       console.log(this.map.getCenter().lng())
     }, 
-
-    dragMarker (e) {
-      console.log(e.latLng.lat())
-      console.log(e.latLng.lng())
+    dragUser (e) {
+      this.ActionLoadCloseStops({
+        action: 'ActionSetStopsUserLocation',
+        coordinates: {
+          lat: e.latLng.lat(),
+          lng: e.latLng.lng()
+        }
+      })
     },
-    changePlace(e){
-      this.center = { 
-          lat: e.geometry.location.lat(), 
-          lng: e.geometry.location.lng()
-      };
-      console.log(e.geometry.location.lat())
-      console.log(e.geometry.location.lng())
+    dragPlace (e){
+      this.ActionLoadCloseStops({
+        action: 'ActionSetStopsPlace',
+        coordinates: {
+          lat: e.latLng.lat(),
+          lng: e.latLng.lng()
+        }
+      })
     }
   },
   computed: {
@@ -140,8 +119,8 @@ export default {
     ...mapState(
       'map', [
         'userLocation', 
-        'greenStop',
-        'redStop',
+        'stopsPlace',
+        'stopsUserLocation',
         'place'
       ]
     ),
